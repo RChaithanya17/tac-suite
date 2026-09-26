@@ -14,8 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TAC Suite — Learn 8 Creative Skills in One Course | The Art Code, Hyderabad",
-  description: "India's first 8-in-1 creative course. Master Video Editing, Graphic Design, After Effects, DaVinci Resolve, Content Creation & Digital Marketing. Build a 10-industry portfolio. Batches in Madhapur, Hyderabad. ",
+  metadataBase: new URL("https://theartcode.org"),
+  alternates: {
+    canonical: "/",
+  },
+  title: "TAC Suite | 8 Creative Skills in One Course",
+  description:
+    "Learn 8 creative skills in one course at TAC Suite, Hyderabad. Master video editing, graphic design, digital marketing, content creation and more.",
   keywords: [
     "creative courses in Hyderabad",
     "video editing course Hyderabad",
@@ -72,16 +77,16 @@ export const metadata: Metadata = {
     "content creator full course offline Hyderabad",
   ],
   openGraph: {
-    title: "TAC Suite — Learn 8 Creative Skills in One Course | The Art Code, Hyderabad",
+    title: "TAC Suite | 8 Creative Skills in One Course",
     description:
-      "India's first 8-in-1 creative course. Master Video Editing, Graphic Design, After Effects, DaVinci Resolve, Content Creation & Digital Marketing. Build a 10-industry portfolio. Batches in Madhapur, Hyderabad.",
+      "Learn 8 creative skills in one course at TAC Suite, Hyderabad. Master video editing, graphic design, digital marketing, content creation and more.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TAC Suite — Learn 8 Creative Skills in One Course | The Art Code, Hyderabad",
+    title: "TAC Suite | 8 Creative Skills in One Course",
     description:
-      "India's first 8-in-1 creative course. Master Video Editing, Graphic Design, After Effects, DaVinci Resolve, Content Creation & Digital Marketing. Build a 10-industry portfolio. Batches in Madhapur, Hyderabad.",
+      "Learn 8 creative skills in one course at TAC Suite, Hyderabad. Master video editing, graphic design, digital marketing, content creation and more.",
   },
 };
 
@@ -97,6 +102,34 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+  {/* Schema.org structured data */}
+  <Script
+    id="schema-org"
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://theartcode.org/#organization",
+            name: "The Art Code",
+            url: "https://theartcode.org",
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://theartcode.org/#website",
+            name: "TAC Suite",
+            url: "https://theartcode.org",
+            publisher: {
+              "@id": "https://theartcode.org/#organization",
+            },
+          },
+        ],
+      }),
+    }}
+  />
+
         {/* 🔥 Facebook Pixel */}
         <Script
           id="facebook-pixel"
@@ -136,8 +169,10 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="min-h-full flex flex-col bg-[#FBF8E4] text-black" suppressHydrationWarning>
-
+      <body
+        className="min-h-full flex flex-col bg-[#FBF8E4] text-black"
+        suppressHydrationWarning
+      >
         {/* 🔥 GTM NoScript */}
         <noscript>
           <iframe
@@ -150,6 +185,8 @@ export default function RootLayout({
 
         {/* 🔥 Facebook Pixel NoScript */}
         <noscript>
+          {/* This is an intentional Facebook tracking pixel; it must remain a plain <img>. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             height="1"
             width="1"
@@ -160,10 +197,7 @@ export default function RootLayout({
         </noscript>
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 flex flex-col gap-0">
-          {children}
-        </main>
-
+        <main className="flex-1 flex flex-col gap-0">{children}</main>
       </body>
     </html>
   );

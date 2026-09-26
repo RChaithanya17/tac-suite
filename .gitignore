@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/backend/node_modules
+/backend/dist
+/public/works/optimized-backup
+/public/tutors/optimized-backup
+/public/students/optimized-backup

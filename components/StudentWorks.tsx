@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from 'framer-motion';
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { galleryItems } from '@/data/studentWorks';
 
 // ============================================================
 // TYPES & UTILITIES
@@ -9,9 +11,9 @@ import { useEffect, useRef } from 'react';
 
 type GL = Renderer['gl'];
 
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+function debounce<T extends (...args: never[]) => void>(func: T, wait: number) {
   let timeout: number;
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(() => func.apply(this, args), wait);
   };
@@ -21,11 +23,19 @@ function lerp(p1: number, p2: number, t: number): number {
   return p1 + (p2 - p1) * t;
 }
 
-function autoBind(instance: any): void {
+
+ function autoBind(instance: object): void {
   const proto = Object.getPrototypeOf(instance);
-  Object.getOwnPropertyNames(proto).forEach(key => {
-    if (key !== 'constructor' && typeof instance[key] === 'function') {
-      instance[key] = instance[key].bind(instance);
+  const target = instance as Record<string, unknown>;
+
+  Object.getOwnPropertyNames(proto).forEach((key) => {
+    if (
+      key !== "constructor" &&
+      typeof target[key] === "function"
+    ) {
+      target[key] = (target[key] as (...args: never[]) => unknown).bind(
+        instance
+      );
     }
   });
 }
@@ -363,7 +373,7 @@ class App {
   container: HTMLElement;
   scrollSpeed: number;
   scroll: { ease: number; current: number; target: number; last: number; position?: number };
-  onCheckDebounce: (...args: any[]) => void;
+  onCheckDebounce: () => void;
   renderer!: Renderer;
   gl!: GL;
   camera!: Camera;
@@ -462,7 +472,16 @@ class App {
 
   onWheel(e: Event) {
     const wheelEvent = e as WheelEvent;
-    const delta = wheelEvent.deltaY || (wheelEvent as any).wheelDelta || (wheelEvent as any).detail;
+    const legacyWheelEvent = wheelEvent as WheelEvent & {
+  wheelDelta?: number;
+  detail?: number;
+};
+
+  const delta =
+  wheelEvent.deltaY ||
+  legacyWheelEvent.wheelDelta ||
+  legacyWheelEvent.detail ||
+  0;
     this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
     this.onCheckDebounce();
   }
@@ -566,41 +585,122 @@ function CircularGallery({
 }
 
 // ============================================================
-// GALLERY ITEMS
-// ============================================================
-
-const galleryItems = [
-  { image: "/works/mothish.webp",  text: "PEDDI  POSTER"   },
-  { image: "/works/nike.jpeg",     text: "NIKE  POSTER"      },
-  { image: "/works/biker.png",     text: "BIKER  POSTER"    },
-  { image: "/works/Vedam.jpg",     text: "VEDAM  POSTER"     },
-  // { image: "/works/dandora.png",   text: "DANDORA  POSTER"    },
-  { image: "/works/arjun.png",     text: "ARJUN REDDY POSTER"    },
-  { image: "/works/BMW.webp",     text: "BMW POSTER"    },
-  { image: "/works/PARADISE.webp",     text: "PARADISE POSTER"    },
-  { image: "/works/DASARA.webp",     text: "DASARA POSTER"    },
-  { image: "/works/ISLAND.webp",     text: "ISLAND POSTER"    },
-  { image: "/works/NK.webp",     text: "NUVVE KAVALI POSTER"    },
-  { image: "/works/NIKE.webp",     text: "NIKE POSTER"    },
-  { image: "/works/PORSCHE.webp",     text: "PORSCHE POSTER"    },
-  { image: "/works/JAGUAR.webp",     text: "JAGUAR POSTER"    },
-  { image: "/works/FOOD.webp",     text: "FOOD POSTER 2"    },
-  { image: "/works/KAADHAL.webp",     text: "KAADHAL POSTER"    },
-  { image: "/works/GTR.webp",     text: "PORSCHE GTR POSTER"    },
-  { image: "/works/FOOD1.webp",     text: "FOOD POSTER 1"    },
-];
-
-// ============================================================
 // STUDENT WORKS SECTION
 // ============================================================
 
 export function StudentWorks() {
+  type StudentWorkItem = {
+    _id?: string;
+    image: string;
+    text: string;
+  };
+
+  type StudentWorksSettings = {
+    heading: string;
+    description: string;
+    buttonText: string;
+    portfolioUrl: string;
+  };
+
+  const fallbackSettings: StudentWorksSettings = {
+    heading: "STUDENT WORKS",
+    description: "Recreated By Our Students",
+    buttonText: "VIEW STUDENT PORTFOLIO",
+    portfolioUrl: "https://tac-portfolio.vercel.app/",
+  };
+
+  const [studentWorkItems, setStudentWorkItems] =
+    useState<StudentWorkItem[]>(galleryItems);
+
+  const [sectionSettings, setSectionSettings] =
+    useState<StudentWorksSettings>(fallbackSettings);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadStudentWorks = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/student-works"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load student works");
+        }
+
+        const result = await response.json();
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (
+          result.success &&
+          Array.isArray(result.data) &&
+          result.data.length > 0
+        ) {
+          setStudentWorkItems(result.data);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load student works:",
+          error
+        );
+      }
+    };
+
+    const loadStudentWorksSettings = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/student-works-settings"
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Failed to load Student Works settings"
+          );
+        }
+
+        const result = await response.json();
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (result.success && result.data) {
+          setSectionSettings(result.data);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load Student Works settings:",
+          error
+        );
+      }
+    };
+
+    loadStudentWorks();
+    loadStudentWorksSettings();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="w-full bg-[#FBF8E4] text-[#1A1A1A]">
       <section className="w-full py-24 flex flex-col items-center gap-12">
 
         {/* ── Header block ── */}
-        <div className="flex flex-col items-center gap-3 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="flex flex-col items-center gap-3 px-4"
+        >
           <h2
             className="uppercase text-center text-[48px] sm:text-[64px] md:text-[80px] leading-[48px] sm:leading-[60px] md:leading-[80px]"
             style={{
@@ -610,28 +710,35 @@ export function StudentWorks() {
               margin: 0,
             }}
           >
-            STUDENT WORKS
+            {sectionSettings.heading}
           </h2>
 
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 0.55, y: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.5,
+              delay: 0.2,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             className="text-center"
             style={{
               fontFamily: "Figtree, sans-serif",
               fontSize: "16px",
               color: "#1A1A1A",
-              opacity: 0.55,
               letterSpacing: "0.4px",
               margin: 0,
             }}
           >
-            Recreated By Our Students
-          </p>
-        </div>
+            {sectionSettings.description}
+          </motion.p>
+        </motion.div>
 
         {/* ── Gallery ── */}
         <div className="w-full h-[400px] md:h-[600px]">
           <CircularGallery
-            items={galleryItems}
+            items={studentWorkItems}
             bend={3}
             textColor="#1A1A1A"
             borderRadius={0.05}
@@ -640,6 +747,43 @@ export function StudentWorks() {
             scrollEase={0.05}
           />
         </div>
+
+        <motion.a
+          href={sectionSettings.portfolioUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{
+            duration: 0.25,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="group relative mt-2 inline-flex items-center justify-center overflow-hidden border border-[#1A1A1A] px-8 py-4 text-sm font-semibold tracking-[1px]"
+          style={{
+            fontFamily: "Figtree, sans-serif",
+          }}
+        >
+          {/* YELLOW HOVER SWEEP */}
+          <span
+            className="absolute inset-0 bg-[#FFC62A] translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300 ease-out"
+          />
+
+          {/* BUTTON CONTENT */}
+          <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-[#1A1A1A]">
+            <span>{sectionSettings.buttonText}</span>
+
+            <motion.span
+              className="inline-block"
+              whileHover={{ x: 4 }}
+              transition={{
+                duration: 0.2,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              →
+            </motion.span>
+          </span>
+        </motion.a>
 
       </section>
     </div>
