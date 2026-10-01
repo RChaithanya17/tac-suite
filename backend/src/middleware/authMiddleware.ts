@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import Admin from "../models/Admin.js";
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   adminId?: string;
   role?: string;
 }
 
-const protect = (
+const protect = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -46,6 +47,17 @@ const protect = (
       adminId: string;
       role: string;
     };
+
+    // Make sure the admin still exists in the database
+    const adminExists = await Admin.exists({ _id: decoded.adminId });
+
+    if (!adminExists) {
+      res.status(401).json({
+        success: false,
+        message: "Admin account no longer exists",
+      });
+      return;
+    }
 
     req.adminId = decoded.adminId;
     req.role = decoded.role;

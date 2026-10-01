@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/Admin.js";
+import protect, { AuthenticatedRequest } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
@@ -85,5 +86,40 @@ router.post("/login", async (req: Request, res: Response) => {
     });
   }
 });
+
+router.get(
+  "/me",
+  protect,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const admin = await Admin.findById(req.adminId).select("-password");
+
+      if (!admin) {
+        res.status(401).json({
+          success: false,
+          message: "Admin account no longer exists",
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        data: {
+          id: admin._id,
+          name: admin.name,
+          email: admin.email,
+          role: admin.role,
+        },
+      });
+    } catch (error) {
+      console.error("Admin session check error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Session check failed",
+      });
+    }
+  }
+);
 
 export default router;
