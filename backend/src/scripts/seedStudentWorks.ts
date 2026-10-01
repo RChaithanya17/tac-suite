@@ -6,7 +6,7 @@ dotenv.config();
 
 const studentWorks = [
   { image: "/works/mothish-optimized.webp", text: "PEDDI  POSTER" },
-  { image: "/works/nike.jpeg", text: "NIKE  POSTER" },
+  { image: "/works/nike-from-jpeg.webp", text: "NIKE  POSTER" },
   { image: " /works/biker-optimized.webp", text: "BIKER  POSTER" },
   { image: "/works/Vedam.webp", text: "VEDAM  POSTER" },
   { image: "/works/arjun-optimized.webp", text: "ARJUN REDDY POSTER" },
