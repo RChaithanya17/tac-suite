@@ -5,13 +5,14 @@ import Tutor from "../models/Tutor.js";
 dotenv.config();
 
 const tutors = [
-  { image: "/tutors/tutor1-optimized.webp" },
-  { image: "/tutors/tutor2-optimized.webp" },
-  { image: "/tutors/tutor3-optimized.webp" },
+  { image: "/tutors/vali-sayyad.webp" },
+  { image: "/tutors/v-rajesh.webp" },
+  { image: "/tutors/durga-sai.webp" },
+  { image: "/tutors/lokesh-dama.webp" },
+  { image: "/tutors/g-bhanuchandar.webp" },
+  { image: "/tutors/nagoor-basha.webp" },
   { image: "/tutors/tutor4-optimized.webp" },
   { image: "/tutors/tutor5-optimized.webp" },
-  { image: "/tutors/tutor6-optimized.webp" },
-  { image: "/tutors/tutor8-optimized.webp" },
 ];
 
 const seedTutors = async (): Promise<void> => {

@@ -10,6 +10,7 @@ router.get("/", async (_req: Request, res: Response) => {
   try {
     const tutors = await Tutor.find().sort({
       createdAt: 1,
+      _id: 1,
     });
 
     res.json({
