@@ -7,8 +7,8 @@ export type GovernmentCertificate = {
 export const governmentCertificates: GovernmentCertificate[] = [
   {
     src: "/dpiit.png",
-    label: "MSME Registered",
-    sub: "Ministry of MSME, Govt. of India",
+    label: "DPIIT Recognised",
+    sub: "Startup India, Govt. of India",
   },
   {
     src: "/001.png",
@@ -17,7 +17,7 @@ export const governmentCertificates: GovernmentCertificate[] = [
   },
   {
     src: "/msme.png",
-    label: "DPIIT Recognised",
-    sub: "Startup India, Govt. of India",
+    label: "MSME Registered",
+    sub: "Ministry of MSME, Govt. of India",
   },
 ];

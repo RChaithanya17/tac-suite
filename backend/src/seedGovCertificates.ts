@@ -26,8 +26,8 @@ const seedGovCertificates = async () => {
     await GovCertificate.insertMany([
       {
         src: "/dpiit.png",
-        label: "MSME Registered",
-        sub: "Ministry of MSME, Govt. of India",
+        label: "DPIIT Recognised",
+        sub: "Startup India, Govt. of India",
         order: 1,
       },
       {
@@ -38,8 +38,8 @@ const seedGovCertificates = async () => {
       },
       {
         src: "/msme.png",
-        label: "DPIIT Recognised",
-        sub: "Startup India, Govt. of India",
+        label: "MSME Registered",
+        sub: "Ministry of MSME, Govt. of India",
         order: 3,
       },
     ]);

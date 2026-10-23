@@ -299,7 +299,7 @@ export default function GovCertificatesAdminPage() {
                     label: event.target.value,
                   }))
                 }
-                placeholder="MSME Registered"
+                placeholder="DPIIT Recognised"
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#FFC62A] focus:ring-2 focus:ring-[#FFC62A]/20"
               />
             </div>
@@ -319,7 +319,7 @@ export default function GovCertificatesAdminPage() {
                     sub: event.target.value,
                   }))
                 }
-                placeholder="Ministry of MSME, Govt. of India"
+                placeholder="Startup India, Govt. of India"
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-[#FFC62A] focus:ring-2 focus:ring-[#FFC62A]/20"
               />
             </div>

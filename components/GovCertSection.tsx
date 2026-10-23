@@ -15,8 +15,8 @@ type GovernmentCertificate = {
 const fallbackCertificates: GovernmentCertificate[] = [
   {
     src: "/dpiit.png",
-    label: "MSME Registered",
-    sub: "Ministry of MSME, Govt. of India",
+    label: "DPIIT Recognised",
+    sub: "Startup India, Govt. of India",
     order: 1,
   },
   {
@@ -27,8 +27,8 @@ const fallbackCertificates: GovernmentCertificate[] = [
   },
   {
     src: "/msme.png",
-    label: "DPIIT Recognised",
-    sub: "Startup India, Govt. of India",
+    label: "MSME Registered",
+    sub: "Ministry of MSME, Govt. of India",
     order: 3,
   },
 ];
