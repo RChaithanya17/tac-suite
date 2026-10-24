@@ -450,6 +450,17 @@ class App {
         font
       })
     );
+    this.updateSceneOffset();
+  }
+
+  // Side posters drop by up to `bend` along the arc, pushing their captions
+  // below the canvas. Shift the scene up so the arc and captions sit
+  // vertically centred instead of overflowing the bottom edge.
+  updateSceneOffset() {
+    const media = this.medias[0];
+    if (!media) return;
+    const captionDepth = media.plane.scale.y * 0.15 + 0.05; // matches Title placement
+    this.scene.position.y = (Math.max(media.bend, 0) + captionDepth) / 2;
   }
 
   onTouchDown(e: MouseEvent | TouchEvent) {
@@ -504,6 +515,7 @@ class App {
     this.viewport = { width, height };
     if (this.medias) {
       this.medias.forEach(media => media.onResize({ screen: this.screen, viewport: this.viewport }));
+      this.updateSceneOffset();
     }
   }
 
