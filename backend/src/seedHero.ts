@@ -164,7 +164,7 @@ const seedHero = async (): Promise<void> => {
           order: 1,
         },
         {
-          val: "₹30K",
+          val: "₹7.2L",
           label: "Avg Package",
           order: 2,
         },
