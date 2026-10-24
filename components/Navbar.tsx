@@ -117,6 +117,12 @@ const [navbarData, setNavbarData] = useState<NavbarData>({
     };
   }, [open, mobileOpen]);
 
+  // External links (e.g. the student portfolio site) open in a new tab
+  const getExternalLinkProps = (href: string) =>
+    /^https?:\/\//.test(href)
+      ? { target: "_blank", rel: "noopener noreferrer" }
+      : {};
+
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
@@ -275,6 +281,7 @@ const [navbarData, setNavbarData] = useState<NavbarData>({
                       <a
                         key={label}
                         href={href}
+                        {...getExternalLinkProps(href)}
                         onClick={(e) =>
                           handleNavClick(e, href)
                         }
@@ -390,6 +397,7 @@ const [navbarData, setNavbarData] = useState<NavbarData>({
                 <motion.a
                   key={label}
                   href={href}
+                  {...getExternalLinkProps(href)}
                   onClick={(e) =>
                     handleNavClick(e, href)
                   }

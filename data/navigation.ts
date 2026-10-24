@@ -5,7 +5,7 @@ export type NavigationLink = {
 
 export const navigationLinks: NavigationLink[] = [
   { label: "Skills", href: "/#skills" },
-  { label: "Portfolio", href: "/#student-works" },
+  { label: "Portfolio", href: "https://tac-portfolio.vercel.app/" },
   { label: "Placements", href: "/#placements" },
   { label: "Cohorts", href: "/#courses" },
 ];
