@@ -51,7 +51,7 @@ export const bottomStudents: PlacementStudent[] = [
 
 export const placementStats: PlacementStat[] = [
   { value: "6", label: "BATCHES COMPLETED" },
-  { value: "₹30K", label: "AVERAGE PACKAGE — FRESHERS", highlight: true },
+  { value: "₹7.2L", label: "AVERAGE PACKAGE — FRESHERS", highlight: true },
   { value: "100%", label: "PLACEMENT ASSISTANCE" },
   { value: "8", label: "SKILLS PER STUDENT" },
   { value: "₹1L", label: "MONTH-12 FREELANCE TARGET", highlight: true },

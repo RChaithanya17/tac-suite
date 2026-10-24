@@ -276,7 +276,7 @@ const placementStats = [
     label: "BATCHES COMPLETED",
   },
   {
-    value: "₹30K",
+    value: "₹7.2L",
     label: "AVERAGE PACKAGE — FRESHERS",
     highlight: true,
   },
