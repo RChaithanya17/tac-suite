@@ -25,7 +25,7 @@ const seedNavbar = async () => {
         },
         {
           label: "Portfolio",
-          href: "/#student-works",
+          href: "https://tac-portfolio.vercel.app/",
         },
         {
           label: "Placements",
