@@ -40,7 +40,14 @@ export function AnimatedCounter({
   useEffect(() => {
     if (!hasStarted) return;
 
-    const numericValue = parseInt(value.replace(/[^\d]/g, ""), 10);
+    // Decimal values such as "₹7.2L" count up with their decimal places;
+    // everything else keeps the original whole-number parsing.
+    const decimalMatch = value.match(/\d+\.(\d+)/);
+    const decimals = decimalMatch ? decimalMatch[1].length : 0;
+
+    const numericValue = decimalMatch
+      ? parseFloat(decimalMatch[0])
+      : parseInt(value.replace(/[^\d]/g, ""), 10);
 
     if (Number.isNaN(numericValue)) {
       return;
@@ -61,7 +68,10 @@ export function AnimatedCounter({
       const progress = Math.min(elapsed / duration, 1);
 
       const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const currentValue = Math.floor(numericValue * easedProgress);
+      const factor = 10 ** decimals;
+      const currentValue = (
+        Math.floor(numericValue * easedProgress * factor) / factor
+      ).toFixed(decimals);
 
       setDisplayValue(`${prefix}${currentValue}${suffix}`);
 
