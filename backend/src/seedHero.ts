@@ -159,18 +159,18 @@ const seedHero = async (): Promise<void> => {
 
       stats: [
         {
-          val: "5",
-          label: "Cohorts Done",
+          val: "10",
+          label: "Batches Done",
           order: 1,
         },
         {
-          val: "₹30K",
-          label: "Avg Package",
+          val: "₹7.2L",
+          label: "Top Package",
           order: 2,
         },
         {
           val: "10",
-          label: "Portfolio",
+          label: "Industries Portfolio",
           order: 3,
         },
         {

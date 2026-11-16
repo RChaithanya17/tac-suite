@@ -679,7 +679,7 @@ export function HeroSection() {
               delay: 0.15,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="w-full lg:w-1/2 flex flex-col justify-center px-[6%]"
+            className="w-full lg:w-1/2 flex flex-col justify-center px-[6%] pt-12 lg:pt-0"
           >
 
               <motion.p
@@ -834,7 +834,7 @@ export function HeroSection() {
 
                     {/* Label */}
 
-                    <span className="text-[8px] md:text-[9px] tracking-[2px] uppercase font-bold text-[#1A1A1A]/40 mt-1 group-hover:text-[#1A1A1A]/70 transition-colors duration-300">
+                    <span className="text-[8px] md:text-[9px] md:whitespace-nowrap tracking-[2px] uppercase font-bold text-[#1A1A1A]/40 mt-1 group-hover:text-[#1A1A1A]/70 transition-colors duration-300">
                       {s.label}
                     </span>
 

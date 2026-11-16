@@ -21,12 +21,10 @@ export function Navbar() {
 };
 
 type NavbarData = {
-  announcement: string;
   navigationLinks: NavigationLink[];
 };
 
 const [navbarData, setNavbarData] = useState<NavbarData>({
-  announcement: "BATCH 10 • ENROLLMENTS OPEN",
   navigationLinks: [],
 });
 
@@ -56,9 +54,6 @@ const [navbarData, setNavbarData] = useState<NavbarData>({
       if (!isMounted || !result.data) return;
 
       setNavbarData({
-        announcement:
-          result.data.announcement ??
-          "BATCH 10 • ENROLLMENTS OPEN",
         navigationLinks:
           result.data.navigationLinks ?? [],
       });
@@ -216,20 +211,6 @@ const [navbarData, setNavbarData] = useState<NavbarData>({
           }}
           className="relative w-full backdrop-blur-xl border-b border-white/10 flex flex-col"
         >
-          {/* ===================================================== */}
-          {/* SMALL BATCH ANNOUNCEMENT */}
-          {/* ===================================================== */}
-
-          <div className="h-6 w-full shrink-0 flex items-center justify-center bg-[#FFC62A] px-6 lg:px-8">
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#1D1D1D]" />
-
-              <span className="font-mono text-[8px] sm:text-[9px] font-bold tracking-[1.8px] uppercase text-[#1D1D1D]">
-               {navbarData.announcement}
-              </span>
-            </div>
-          </div>
-
           {/* ===================================================== */}
           {/* NAV CONTENT */}
           {/* ===================================================== */}

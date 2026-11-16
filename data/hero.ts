@@ -36,8 +36,8 @@ export const bottomStripItems: HeroStripItem[] = [
 ];
 
 export const heroStats: HeroStat[] = [
-  { val: "5", label: "Cohorts Done" },
-  { val: "₹30K", label: "Avg Package" },
-  { val: "10", label: "Portfolio" },
+  { val: "10", label: "Batches Done" },
+  { val: "₹7.2L", label: "Top Package" },
+  { val: "10", label: "Industries Portfolio" },
   { val: "8", label: "Skills" },
 ];
