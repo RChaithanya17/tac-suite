@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { PlacedStats } from "@/components/PlacedStats";
 
 type PlacementStudent = {
   _id?: string;
@@ -16,6 +17,28 @@ type PlacementStudent = {
 };
 
 const API_BASE_URL = "http://localhost:5000";
+
+/* Parse a stored package (e.g. "3.0", "4.5 LPA") to a number.
+ * Missing or unparseable values return null so they never rank as highest. */
+function parsePackage(lpa?: string): number | null {
+  const match = lpa?.match(/\d+(\.\d+)?/);
+  if (!match) return null;
+  const value = Number.parseFloat(match[0]);
+  return Number.isFinite(value) ? value : null;
+}
+
+/* Highest package first; students without a valid package go last.
+ * Array.prototype.sort is stable, so ties keep their original order. */
+function sortByPackageDesc(students: PlacementStudent[]) {
+  return [...students].sort((a, b) => {
+    const pa = parsePackage(a.lpa);
+    const pb = parsePackage(b.lpa);
+    if (pa === null && pb === null) return 0;
+    if (pa === null) return 1;
+    if (pb === null) return -1;
+    return pb - pa;
+  });
+}
 
 function StudentCard({ student }: { student: PlacementStudent }) {
   return (
@@ -152,13 +175,13 @@ export function SimpleInfiniteCarousel() {
           return;
         }
 
-        setTopStudents(
-          students.filter((student) => student.section === "top")
-        );
+        /* Top carousel: highest-paid half. Bottom: the rest, still
+         * high-to-low so the lowest/unknown packages appear last. */
+        const sorted = sortByPackageDesc(students);
+        const splitAt = Math.ceil(sorted.length / 2);
 
-        setBottomStudents(
-          students.filter((student) => student.section === "bottom")
-        );
+        setTopStudents(sorted.slice(0, splitAt));
+        setBottomStudents(sorted.slice(splitAt));
       } catch (error) {
         console.error("Failed to load placement students:", error);
       } finally {
@@ -186,8 +209,9 @@ export function SimpleInfiniteCarousel() {
           duration: 0.7,
           ease: [0.22, 1, 0.36, 1],
         }}
-        className="mb-16 px-[5%]"
+        className="mb-16 px-[5%] xl:flex xl:items-center xl:justify-between xl:gap-12"
       >
+        <div className="shrink-0">
         <div className="mb-4 flex items-center gap-3">
           <motion.span
             initial={{ width: 0, opacity: 0 }}
@@ -230,6 +254,9 @@ export function SimpleInfiniteCarousel() {
           PLACED &<br />
           THRIVING.
         </motion.h2>
+        </div>
+
+        <PlacedStats className="mt-10 xl:mt-8 xl:max-w-[760px] xl:flex-1" />
       </motion.div>
 
       {loading ? (
