@@ -112,7 +112,7 @@ export function IndustriesSection() {
   }, []);
 
   return (
-    <section className="bg-[#1A1A1A] text-[#f7f1e4] px-[6%] py-28">
+    <section className="bg-[#1A1A1A] text-[#f7f1e4] px-[6%] pt-28 pb-14">
       {/* TOP */}
       <div className="grid md:grid-cols-2 gap-10 items-start mb-16 md:mb-30">
         <motion.div

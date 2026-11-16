@@ -132,7 +132,7 @@ export function CertificateSection() {
   const headingParts = certificate.heading.split(" READY ");
 
   return (
-    <section className="bg-[#1A1A1A] text-white px-[6%] py-28">
+    <section className="bg-[#1A1A1A] text-white px-[6%] pt-14 pb-28">
       {/* TOP */}
       <div className="grid md:grid-cols-2 gap-12 mb-20">
         {/* LEFT TITLE */}
