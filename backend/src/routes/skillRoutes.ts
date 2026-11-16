@@ -5,7 +5,7 @@ const router = Router();
 // Get all skills
 router.get("/", async (_req: Request, res: Response) => {
   try {
-    const skills = await Skill.find().sort({ createdAt: 1 });
+    const skills = await Skill.find().sort({ order: 1, createdAt: 1 });
     res.json({
       success: true,
       data: skills,

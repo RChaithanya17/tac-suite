@@ -5,28 +5,34 @@ interface Skill {
   _id: string;
   id: string;
   title: string;
+  subtitle?: string;
   desc: string;
   icon: string;
   tags: string[];
   stat: string;
+  order?: number;
   createdAt: string;
   updatedAt: string;
 }
 interface SkillForm {
   id: string;
   title: string;
+  subtitle: string;
   desc: string;
   icon: string;
   tags: string;
   stat: string;
+  order: string;
 }
 const emptyForm: SkillForm = {
   id: "",
   title: "",
+  subtitle: "",
   desc: "",
   icon: "Video",
   tags: "",
   stat: "",
+  order: "",
 };
 const iconOptions = [
   "Video",
@@ -37,6 +43,8 @@ const iconOptions = [
   "Camera",
   "Handshake",
   "Megaphone",
+  "ImagePlus",
+  "Clapperboard",
 ];
 export default function SkillsAdminPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -81,6 +89,7 @@ export default function SkillsAdminPage() {
       const payload = {
         id: form.id.trim(),
         title: form.title.trim(),
+        subtitle: form.subtitle.trim(),
         desc: form.desc.trim(),
         icon: form.icon,
         tags: form.tags
@@ -88,6 +97,7 @@ export default function SkillsAdminPage() {
           .map((tag) => tag.trim())
           .filter(Boolean),
         stat: form.stat.trim(),
+        order: Number(form.order) || 0,
       };
       const endpoint = editingId
         ? `/api/skills/${editingId}`
@@ -122,10 +132,12 @@ export default function SkillsAdminPage() {
     setForm({
       id: skill.id,
       title: skill.title,
+      subtitle: skill.subtitle ?? "",
       desc: skill.desc,
       icon: skill.icon,
       tags: skill.tags.join(", "),
       stat: skill.stat,
+      order: String(skill.order ?? ""),
     });
     setError("");
     setSuccess("");
@@ -231,6 +243,30 @@ export default function SkillsAdminPage() {
               </div>
               <div>
                 <label
+                  htmlFor="skill-subtitle"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Subtitle (optional)
+                </label>
+                <input
+                  id="skill-subtitle"
+                  type="text"
+                  value={form.subtitle}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      subtitle: event.target.value,
+                    })
+                  }
+                  placeholder="After Effects"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Software name shown under the heading.
+                </p>
+              </div>
+              <div>
+                <label
                   htmlFor="skill-description"
                   className="mb-2 block text-sm font-medium text-gray-700"
                 >
@@ -295,11 +331,10 @@ export default function SkillsAdminPage() {
                     })
                   }
                   placeholder="Premiere, Reels, Cuts"
-                  required
                   className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
                 />
                 <p className="mt-2 text-xs text-gray-500">
-                  Separate tags with commas.
+                  Separate tags with commas. Leave blank for no tags.
                 </p>
               </div>
               <div>
@@ -323,6 +358,31 @@ export default function SkillsAdminPage() {
                   required
                   className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
                 />
+              </div>
+              <div>
+                <label
+                  htmlFor="skill-order"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Display Order
+                </label>
+                <input
+                  id="skill-order"
+                  type="number"
+                  min={0}
+                  value={form.order}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      order: event.target.value,
+                    })
+                  }
+                  placeholder="1"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Lower numbers appear first on the website.
+                </p>
               </div>
               {error && (
                 <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -397,6 +457,11 @@ export default function SkillsAdminPage() {
                     <h3 className="mt-4 text-lg font-semibold text-gray-900">
                       {skill.title}
                     </h3>
+                    {skill.subtitle && (
+                      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-400">
+                        {skill.subtitle}
+                      </p>
+                    )}
                     <p className="mt-2 text-sm leading-6 text-gray-500">
                       {skill.desc}
                     </p>

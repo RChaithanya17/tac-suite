@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Camera,
+  Clapperboard,
   Handshake,
+  ImagePlus,
   Megaphone,
   Palette,
   PenTool,
@@ -18,6 +20,7 @@ type SkillFromAPI = {
   _id?: string;
   id: string;
   title: string;
+  subtitle?: string;
   desc: string;
   icon: string;
   tags: string[];
@@ -35,19 +38,13 @@ const iconMap: Record<string, LucideIcon> = {
   Camera,
   Handshake,
   Megaphone,
+  ImagePlus,
+  Clapperboard,
 };
 
 const fallbackSkills: SkillFromAPI[] = [
   {
     id: "01",
-    title: "Video Editing",
-    desc: "Premiere Pro, narrative cuts, reels.",
-    icon: "Video",
-    tags: ["Premiere", "Reels", "Cuts"],
-    stat: "Short-form mastery",
-  },
-  {
-    id: "02",
     title: "Graphic Design",
     desc: "Photoshop, Illustrator, branding.",
     icon: "Palette",
@@ -55,8 +52,17 @@ const fallbackSkills: SkillFromAPI[] = [
     stat: "Visual identity",
   },
   {
+    id: "02",
+    title: "Video Editing",
+    desc: "Premiere Pro, narrative cuts, reels.",
+    icon: "Video",
+    tags: ["Premiere", "Reels", "Cuts"],
+    stat: "Short-form mastery",
+  },
+  {
     id: "03",
-    title: "After Effects",
+    title: "Motion Graphics",
+    subtitle: "After Effects",
     desc: "Motion graphics, animations, VFX.",
     icon: "Sparkles",
     tags: ["Motion", "VFX", "Animation"],
@@ -64,7 +70,8 @@ const fallbackSkills: SkillFromAPI[] = [
   },
   {
     id: "04",
-    title: "DaVinci Resolve",
+    title: "Colour Grading",
+    subtitle: "DaVinci Resolve",
     desc: "Colour grading, cinema outputs.",
     icon: "Wand2",
     tags: ["Color", "Cinematic", "LUTs"],
@@ -72,35 +79,19 @@ const fallbackSkills: SkillFromAPI[] = [
   },
   {
     id: "05",
-    title: "Content Writing",
-    desc: "Scripts, captions, SEO articles.",
-    icon: "PenTool",
-    tags: ["Scripts", "SEO", "Copy"],
-    stat: "Engaging storytelling",
+    title: "AI Module",
+    desc: "Image Generation",
+    icon: "ImagePlus",
+    tags: [],
+    stat: "AI image creation",
   },
   {
     id: "06",
-    title: "Content Shoot",
-    desc: "Camera, lighting, direction.",
-    icon: "Camera",
-    tags: ["Camera", "Lighting", "Angles"],
-    stat: "Production skills",
-  },
-  {
-    id: "07",
-    title: "Client Management",
-    desc: "Briefing, revisions, retention.",
-    icon: "Handshake",
-    tags: ["Clients", "Deals", "Retention"],
-    stat: "Professional workflow",
-  },
-  {
-    id: "08",
-    title: "Digital Marketing",
-    desc: "Ads, SEO, analytics, growth.",
-    icon: "Megaphone",
-    tags: ["Ads", "SEO", "Growth"],
-    stat: "Revenue focus",
+    title: "AI Module",
+    desc: "Video Generation",
+    icon: "Clapperboard",
+    tags: [],
+    stat: "AI video creation",
   },
 ];
 
@@ -210,7 +201,7 @@ export function SkillsSection() {
       </div>
 
       {/* SKILLS GRID */}
-      <div className="relative z-10 mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="relative z-10 mt-6 grid grid-cols-1 auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill, i) => {
           const isSelected = selectedSkill === skill.id;
 
@@ -305,6 +296,18 @@ export function SkillsSection() {
                 >
                   {skill.title}
                 </h3>
+
+                {skill.subtitle && (
+                  <p
+                    className={`-mt-1 mb-2 text-[10px] font-mono font-bold uppercase tracking-[2px] transition-colors duration-300 ${
+                      isSelected
+                        ? "text-white/50"
+                        : "text-[#1D1D1D]/45 group-hover:text-white/50"
+                    }`}
+                  >
+                    {skill.subtitle}
+                  </p>
+                )}
 
                 <p
                   className={`mb-4 text-[12px] leading-relaxed transition-colors duration-300 ${

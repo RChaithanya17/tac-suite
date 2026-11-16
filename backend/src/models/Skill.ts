@@ -2,10 +2,12 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface ISkill extends Document {
   id: string;
   title: string;
+  subtitle?: string;
   desc: string;
   icon: string;
   tags: string[];
   stat: string;
+  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +22,11 @@ const skillSchema = new Schema<ISkill>(
       type: String,
       required: true,
       trim: true,
+    },
+    subtitle: {
+      type: String,
+      trim: true,
+      default: "",
     },
     desc: {
       type: String,
@@ -40,6 +47,10 @@ const skillSchema = new Schema<ISkill>(
       type: String,
       required: true,
       trim: true,
+    },
+    order: {
+      type: Number,
+      default: 0,
     },
   },
   {
