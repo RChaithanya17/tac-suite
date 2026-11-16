@@ -617,7 +617,7 @@ export function StudentWorks() {
   const fallbackSettings: StudentWorksSettings = {
     heading: "STUDENT WORKS",
     description: "Recreated By Our Students",
-    buttonText: "VIEW STUDENT PORTFOLIO",
+    buttonText: "VIEW MORE STUDENT PORTFOLIO",
     portfolioUrl: "https://tac-portfolio.vercel.app/",
   };
 
@@ -770,7 +770,7 @@ export function StudentWorks() {
             duration: 0.25,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="group relative mt-2 inline-flex items-center justify-center overflow-hidden border border-[#1A1A1A] px-8 py-4 text-sm font-semibold tracking-[1px]"
+          className="group relative mt-2 inline-flex items-center justify-center overflow-hidden border border-[#1A1A1A] px-8 max-[360px]:px-3 py-4 text-sm font-semibold tracking-[1px]"
           style={{
             fontFamily: "Figtree, sans-serif",
           }}

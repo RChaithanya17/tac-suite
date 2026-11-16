@@ -21,7 +21,7 @@ const seedStudentWorksSettings = async () => {
     await StudentWorksSettings.create({
       heading: "STUDENT WORKS",
       description: "Recreated By Our Students",
-      buttonText: "VIEW STUDENT PORTFOLIO",
+      buttonText: "VIEW MORE STUDENT PORTFOLIO",
       portfolioUrl: "https://tac-portfolio.vercel.app/",
     });
 
