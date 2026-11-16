@@ -272,30 +272,36 @@ const bottomStudents = [
 
 const placementStats = [
   {
-    value: "6",
+    value: "10",
     label: "BATCHES COMPLETED",
-  },
-  {
-    value: "₹30K",
-    label: "AVERAGE PACKAGE — FRESHERS",
-    highlight: true,
-  },
-  {
-    value: "100%",
-    label: "PLACEMENT ASSISTANCE",
+    order: 1,
   },
   {
     value: "8",
     label: "SKILLS PER STUDENT",
+    order: 2,
+  },
+  {
+    value: "100%",
+    label: "PLACEMENT GUARANTEE",
+    order: 3,
+  },
+  {
+    value: "₹30K",
+    label: "TOP PACKAGE",
+    highlight: true,
+    order: 4,
   },
   {
     value: "₹1L",
     label: "MONTH-12 FREELANCE TARGET",
     highlight: true,
+    order: 5,
   },
   {
     value: "10",
-    label: "INDUSTRY PORTFOLIO",
+    label: "INDUSTRIES PORTFOLIO",
+    order: 6,
   },
 ];
 

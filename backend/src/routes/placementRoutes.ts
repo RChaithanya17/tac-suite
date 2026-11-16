@@ -194,7 +194,7 @@ router.delete(
 // GET all placement stats - public
 router.get("/stats", async (_req: Request, res: Response) => {
   try {
-    const stats = await PlacementStat.find().sort({ createdAt: 1 });
+    const stats = await PlacementStat.find().sort({ order: 1, createdAt: 1 });
 
     res.json({
       success: true,

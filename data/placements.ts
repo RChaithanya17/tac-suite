@@ -50,10 +50,10 @@ export const bottomStudents: PlacementStudent[] = [
 ];
 
 export const placementStats: PlacementStat[] = [
-  { value: "6", label: "BATCHES COMPLETED" },
-  { value: "₹30K", label: "AVERAGE PACKAGE — FRESHERS", highlight: true },
-  { value: "100%", label: "PLACEMENT ASSISTANCE" },
+  { value: "10", label: "BATCHES COMPLETED" },
   { value: "8", label: "SKILLS PER STUDENT" },
+  { value: "100%", label: "PLACEMENT GUARANTEE" },
+  { value: "₹30K", label: "TOP PACKAGE", highlight: true },
   { value: "₹1L", label: "MONTH-12 FREELANCE TARGET", highlight: true },
-  { value: "10", label: "INDUSTRY PORTFOLIO" },
+  { value: "10", label: "INDUSTRIES PORTFOLIO" },
 ];
