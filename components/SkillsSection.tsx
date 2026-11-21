@@ -2,19 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Camera,
-  Clapperboard,
-  Handshake,
-  ImagePlus,
-  Megaphone,
-  Palette,
-  PenTool,
-  Sparkles,
-  Video,
-  Wand2,
-  type LucideIcon,
-} from "lucide-react";
 
 type SkillFromAPI = {
   _id?: string;
@@ -25,73 +12,152 @@ type SkillFromAPI = {
   icon: string;
   tags: string[];
   stat: string;
+  track?: string;
+  lessons?: string[];
+  aiLesson?: string;
 };
 
 const API_BASE_URL = "http://localhost:5000";
-
-const iconMap: Record<string, LucideIcon> = {
-  Video,
-  Palette,
-  Sparkles,
-  Wand2,
-  PenTool,
-  Camera,
-  Handshake,
-  Megaphone,
-  ImagePlus,
-  Clapperboard,
-};
 
 const fallbackSkills: SkillFromAPI[] = [
   {
     id: "01",
     title: "Graphic Design",
-    desc: "Photoshop, Illustrator, branding.",
-    icon: "Palette",
-    tags: ["Photoshop", "Branding", "Logos"],
+    desc: "Posters, social, branding and product design.",
+    icon: "Photoshop",
+    tags: ["Photoshop", "Firefly", "Posters"],
     stat: "Visual identity",
+    track: "Photoshop + AI",
+    lessons: [
+      "Movie / OTT Poster Design",
+      "Social Media Design",
+      "YouTube & Content Creator Design",
+      "E-commerce & Product Design",
+      "Branding & Identity Design",
+      "Advanced Photo Manipulation",
+      "Print & Marketing Collateral",
+    ],
   },
   {
     id: "02",
-    title: "Video Editing",
-    desc: "Premiere Pro, narrative cuts, reels.",
-    icon: "Video",
-    tags: ["Premiere", "Reels", "Cuts"],
-    stat: "Short-form mastery",
+    title: "Graphic Design",
+    desc: "Vectors, type, packaging and merch.",
+    icon: "Palette",
+    tags: ["Illustrator", "Vectors", "Logos"],
+    stat: "Brand assets",
+    track: "Illustrator + AI",
+    lessons: [
+      "Typography & Font Design",
+      "Print & Packaging Design",
+      "Social Media & Web Design",
+      "Vector & Illustration Design",
+      "Merchandise & Product Design",
+      "Advanced Vector & Assets",
+    ],
   },
   {
     id: "03",
-    title: "Motion Graphics",
-    subtitle: "After Effects",
-    desc: "Motion graphics, animations, VFX.",
-    icon: "Sparkles",
-    tags: ["Motion", "VFX", "Animation"],
-    stat: "High-end visuals",
+    title: "Editing",
+    desc: "Trailers, weddings, reels and short films.",
+    icon: "Video",
+    tags: ["Premiere", "Reels", "Cuts"],
+    stat: "Short-form mastery",
+    track: "Premiere Pro + AI",
+    lessons: [
+      "Movie Trailer Cuts",
+      "Cinematic Wedding Teaser",
+      "Beat-Based Editing",
+      "Social Media Reels · 10 industries",
+      "Complete Short Film Editing",
+      "Own Style Editing & Final Touches",
+    ],
   },
   {
     id: "04",
-    title: "Colour Grading",
-    subtitle: "DaVinci Resolve",
-    desc: "Colour grading, cinema outputs.",
-    icon: "Wand2",
-    tags: ["Color", "Cinematic", "LUTs"],
-    stat: "Pro grading",
+    title: "Motion Graphics",
+    desc: "Titles, motion design, animation and VFX.",
+    icon: "Sparkles",
+    tags: ["Motion", "VFX", "Animation"],
+    stat: "High-end visuals",
+    track: "After Effects + AI",
+    lessons: [
+      "Logo & Title Animation",
+      "Social Media Motion Graphics",
+      "Promo & Explainer Animation",
+      "Tracking & Compositing VFX",
+      "Character & Product Animation",
+      "2D Character Animation",
+      "Advanced Motion Graphics",
+    ],
   },
   {
     id: "05",
-    title: "AI Module",
-    desc: "Image Generation",
-    icon: "ImagePlus",
-    tags: [],
-    stat: "AI image creation",
+    title: "Colour Grading",
+    desc: "From correction to cinematic looks.",
+    icon: "Globe",
+    tags: ["Colour", "Cinematic", "LUTs"],
+    stat: "Pro grading",
+    track: "DaVinci Resolve",
+    lessons: [
+      "Basic Colour Correction",
+      "Cinematic Look Creation",
+      "Skin Tone Grading",
+      "Commercial Colour Grading",
+      "Advanced Professional Grading",
+      "Special Effects Grading",
+    ],
   },
   {
     id: "06",
-    title: "AI Module",
-    desc: "Video Generation",
-    icon: "Clapperboard",
-    tags: [],
-    stat: "AI video creation",
+    title: "AI Image Generation",
+    desc: "From a single prompt to a realistic visual.",
+    icon: "Image",
+    tags: ["Prompts", "Upscale", "Characters"],
+    stat: "Lock the image first",
+    track: "Image",
+    lessons: [
+      "High-Quality Realistic Visuals",
+      "Accurate Facial Details",
+      "Cinematic, Professional Lighting",
+      "Clean, Balanced Composition",
+      "Realistic Depth & Shadows",
+      "Premium Visual Aesthetics",
+      "Natural Body Proportions",
+    ],
+  },
+  {
+    id: "07",
+    title: "AI Video Generation",
+    desc: "Turn locked images into cinematic video.",
+    icon: "Video",
+    tags: ["Higgsfield", "Runway", "Magnific"],
+    stat: "Then animate it",
+    track: "Higgsfield · Runway · Magnific",
+    lessons: [
+      "Smooth Cinematic Motion",
+      "Realistic Camera Movements",
+      "Consistent Visual Quality",
+      "Engaging Visual Effects",
+      "Transform Ideas into Videos",
+      "Quality Video Content",
+    ],
+  },
+  {
+    id: "08",
+    title: "AI Workflows",
+    desc: "One character, every shot, every tool.",
+    icon: "Braces",
+    tags: ["Workflows", "JSON", "Consistency"],
+    stat: "Direct, don’t just generate",
+    track: "JSON + Character Consistency",
+    lessons: [
+      "Prompt Structure & Shot Language",
+      "JSON Prompting",
+      "Character Sheet & Locking",
+      "Consistent Character Across Shots",
+      "Image-to-Video Pipeline",
+      "Final AI Film Project",
+    ],
   },
 ];
 
@@ -201,11 +267,23 @@ export function SkillsSection() {
       </div>
 
       {/* SKILLS GRID */}
-      <div className="relative z-10 mt-6 grid grid-cols-1 auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative z-10 mt-6 grid grid-cols-1 auto-rows-fr gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {skills.map((skill, i) => {
           const isSelected = selectedSkill === skill.id;
 
-          const SkillIcon = iconMap[skill.icon] ?? Video;
+          // Cards with a lesson list show a track header and numbered lessons.
+          const lessons = skill.lessons ?? [];
+          const isModule = lessons.length > 0;
+
+          const titleClass = `text-lg font-black uppercase tracking-tight transition-colors duration-300 ${
+            isSelected ? "text-white" : "text-[#1D1D1D] group-hover:text-white"
+          }`;
+
+          const lessonTextClass = `text-[13px] leading-snug min-[768px]:text-[14px] min-[1024px]:text-[15px] min-[1280px]:text-[12px] min-[1440px]:text-[14px] min-[1800px]:text-[17px] transition-colors duration-300 ${
+            isSelected
+              ? "text-white/80"
+              : "text-[#1D1D1D]/80 group-hover:text-white/80"
+          }`;
 
           return (
             <motion.div
@@ -219,10 +297,8 @@ export function SkillsSection() {
                 ease: [0.22, 1, 0.36, 1],
               }}
               whileHover={{ y: -8, scale: 1.02 }}
-              onClick={() =>
-                setSelectedSkill(isSelected ? null : skill.id)
-              }
-              className={`group relative cursor-pointer overflow-hidden rounded-3xl border p-8 shadow-md transition-all duration-300 ${
+              onClick={() => setSelectedSkill(isSelected ? null : skill.id)}
+              className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border p-4.75 shadow-md transition-all duration-300 ${
                 isSelected
                   ? "border-[#FFC62A] bg-[#1D1D1D] shadow-xl"
                   : "border-[#1D1D1D]/5 bg-white hover:shadow-xl"
@@ -248,54 +324,15 @@ export function SkillsSection() {
                 }`}
               />
 
-              {/* ACTIVE INDICATOR */}
-              {isSelected && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="absolute right-6 top-6 flex h-7 w-7 items-center justify-center rounded-full bg-[#FFC62A] text-xs font-black text-[#1D1D1D]"
-                >
-                  ✓
-                </motion.div>
-              )}
-
-              {/* ICON */}
-              <motion.div
-                whileHover={{ scale: 1.08, rotate: 3 }}
-                transition={{
-                  duration: 0.2,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className={`relative z-10 mb-6 flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300 ${
-                  isSelected
-                    ? "bg-[#FFC62A] text-[#1D1D1D]"
-                    : "bg-[#FFC62A]/10 text-[#FFC62A] group-hover:bg-[#FFC62A] group-hover:text-[#1D1D1D]"
-                }`}
-              >
-                <SkillIcon size={22} strokeWidth={2.5} />
-              </motion.div>
-
               {/* CONTENT */}
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-1 flex-col">
                 <p
-                  className={`mb-2 text-[10px] font-mono font-bold tracking-[2px] transition-colors duration-300 ${
-                    isSelected
-                      ? "text-[#FFC62A]"
-                      : "text-[#FFC62A]"
-                  }`}
+                  className={`${isModule ? "mb-1.5" : "mb-2"} text-[10px] font-mono font-bold tracking-[2px] text-[#FFC62A]`}
                 >
                   {skill.id}
                 </p>
 
-                <h3
-                  className={`mb-2 text-lg font-black uppercase tracking-tight transition-colors duration-300 ${
-                    isSelected
-                      ? "text-white"
-                      : "text-[#1D1D1D] group-hover:text-white"
-                  }`}
-                >
-                  {skill.title}
-                </h3>
+                <h3 className={`mb-2 ${titleClass}`}>{skill.title}</h3>
 
                 {skill.subtitle && (
                   <p
@@ -310,7 +347,7 @@ export function SkillsSection() {
                 )}
 
                 <p
-                  className={`mb-4 text-[12px] leading-relaxed transition-colors duration-300 ${
+                  className={`mb-2.5 text-[12px] leading-snug transition-colors duration-300 ${
                     isSelected
                       ? "text-white/60"
                       : "text-[#1D1D1D]/60 group-hover:text-white/60"
@@ -319,43 +356,106 @@ export function SkillsSection() {
                   {skill.desc}
                 </p>
 
-                {/* TAGS */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {skill.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`rounded-md border px-2 py-1 text-[9px] font-mono tracking-[1.5px] transition ${
+                {/* MODULE LESSONS */}
+                {isModule && (
+                  <div
+                    className={`mb-3 border-t pt-2.5 transition-colors duration-300 ${
+                      isSelected
+                        ? "border-white/10"
+                        : "border-[#1D1D1D]/10 group-hover:border-white/10"
+                    }`}
+                  >
+                    <p
+                      className={`mb-1.5 text-[12px] font-black uppercase tracking-tight transition-colors duration-300 ${
                         isSelected
-                          ? "border-white/20 text-white/70"
-                          : "border-[#1D1D1D]/10 text-[#1D1D1D]/60 group-hover:border-white/20 group-hover:text-white/70"
+                          ? "text-white"
+                          : "text-[#1D1D1D] group-hover:text-white"
                       }`}
                     >
-                      {tag}
-                    </span>
-                  ))}
+                      {skill.track}
+                    </p>
+
+                    <ol className="space-y-2 min-[1800px]:space-y-2.5">
+                      {lessons.map((lesson, li) => {
+                        // Text after " · " is a muted note, e.g. "Reels · 10 industries".
+                        const [name, ...note] = lesson.split(" · ");
+                        return (
+                          <li
+                            key={lesson}
+                            className="flex items-baseline gap-2.5"
+                          >
+                            <span className="w-6 shrink-0 text-[11px] min-[1800px]:text-[12px] font-mono font-bold text-[#FFC62A]">
+                              {String(li + 1).padStart(2, "0")}
+                            </span>
+                            <span className={lessonTextClass}>
+                              {name}
+                              {note.length > 0 && (
+                                <span
+                                  className={
+                                    isSelected
+                                      ? "text-white/45"
+                                      : "text-[#1D1D1D]/45 group-hover:text-white/45"
+                                  }
+                                >
+                                  {" · "}
+                                  {note.join(" · ")}
+                                </span>
+                              )}
+                            </span>
+                          </li>
+                        );
+                      })}
+
+                      {skill.aiLesson && (
+                        <li className="flex items-baseline gap-2.5">
+                          <span className="w-6 shrink-0">
+                            <span className="rounded bg-[#FFC62A] px-1 py-px text-[8px] font-mono font-bold text-[#1D1D1D]">
+                              AI
+                            </span>
+                          </span>
+                          <span className={lessonTextClass}>
+                            {skill.aiLesson}
+                          </span>
+                        </li>
+                      )}
+                    </ol>
+                  </div>
+                )}
+
+                {/* FOOTER — tags, stat and click hint, pinned to the card bottom */}
+                <div className="mt-auto pt-3">
+                  {/* TAGS */}
+                  <div className="mb-2.5 flex flex-wrap gap-2">
+                    {skill.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`rounded-md border px-2 py-1 text-[9px] font-mono tracking-[1.5px] transition ${
+                          isSelected
+                            ? "border-white/20 text-white/70"
+                            : "border-[#1D1D1D]/10 text-[#1D1D1D]/60 group-hover:border-white/20 group-hover:text-white/70"
+                        }`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div>
+                    {/* BOTTOM STAT */}
+                    {skill.stat && (
+                      <p
+                        className={`text-[11px] font-mono uppercase tracking-[2px] transition ${
+                          isSelected
+                            ? "text-white/60"
+                            : "text-[#1D1D1D]/60 group-hover:text-white/60"
+                        }`}
+                      >
+                        {skill.stat}
+                      </p>
+                    )}
+
+                  </div>
                 </div>
-
-                {/* BOTTOM STAT */}
-                <p
-                  className={`text-[10px] font-mono uppercase tracking-[2px] transition ${
-                    isSelected
-                      ? "text-white/40"
-                      : "text-[#1D1D1D]/40 group-hover:text-white/40"
-                  }`}
-                >
-                  {skill.stat}
-                </p>
-
-                {/* CLICK HINT */}
-                <p
-                  className={`mt-4 text-[9px] font-mono uppercase tracking-[1.5px] transition-opacity duration-300 ${
-                    isSelected
-                      ? "text-[#FFC62A] opacity-100"
-                      : "text-[#1D1D1D]/30 opacity-0 group-hover:opacity-100"
-                  }`}
-                >
-                  {isSelected ? "CLICK TO CLOSE" : "CLICK TO EXPLORE"}
-                </p>
               </div>
             </motion.div>
           );

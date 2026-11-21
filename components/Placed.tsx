@@ -256,7 +256,7 @@ export function SimpleInfiniteCarousel() {
         </motion.h2>
         </div>
 
-        <PlacedStats className="mt-10 xl:mt-8 xl:max-w-[760px] xl:flex-1" />
+        <PlacedStats className="mt-10 xl:mt-8 xl:-ml-6 xl:mr-[calc(16px_-_5.5556%)] xl:max-w-[calc((836px_+_5.5556%_-_16px)*1.07)] xl:flex-1" />
       </motion.div>
 
       {loading ? (

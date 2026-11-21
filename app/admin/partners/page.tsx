@@ -5,6 +5,7 @@ import { adminApi } from "@/lib/adminApi";
 
 type Partner = {
   name: string;
+  logo?: string;
 };
 
 type PartnersData = {
@@ -50,11 +51,15 @@ export default function PartnersAdminPage() {
     loadPartners();
   }, []);
 
-  const updatePartner = (index: number, name: string) => {
+  const updatePartner = (
+    index: number,
+    field: keyof Partner,
+    value: string
+  ) => {
     setData((current) => ({
       ...current,
       partners: current.partners.map((partner, i) =>
-        i === index ? { ...partner, name } : partner
+        i === index ? { ...partner, [field]: value } : partner
       ),
     }));
   };
@@ -62,7 +67,7 @@ export default function PartnersAdminPage() {
   const addPartner = () => {
     setData((current) => ({
       ...current,
-      partners: [...current.partners, { name: "" }],
+      partners: [...current.partners, { name: "", logo: "" }],
     }));
   };
 
@@ -152,10 +157,11 @@ export default function PartnersAdminPage() {
           <div className="mb-5 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">
-                Partner Names
+                Partner Logos
               </h2>
               <p className="mt-1 text-sm text-gray-500">
-                Add, edit or remove partner names.
+                Add, edit or remove partners. Only partners with a logo
+                path (e.g. /partners/yaas.webp) appear on the website.
               </p>
             </div>
 
@@ -181,11 +187,33 @@ export default function PartnersAdminPage() {
                 <input
                   type="text"
                   value={partner.name}
+                  placeholder="Company name"
                   onChange={(event) =>
-                    updatePartner(index, event.target.value)
+                    updatePartner(index, "name", event.target.value)
                   }
                   className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 outline-none focus:border-gray-500"
                 />
+
+                <input
+                  type="text"
+                  value={partner.logo ?? ""}
+                  placeholder="/partners/logo.webp"
+                  onChange={(event) =>
+                    updatePartner(index, "logo", event.target.value)
+                  }
+                  className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 outline-none focus:border-gray-500"
+                />
+
+                {partner.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={partner.logo}
+                    alt=""
+                    className="h-10 w-[100px] shrink-0 rounded-md border border-gray-200 bg-[#F7F7F7] object-contain"
+                  />
+                ) : (
+                  <span className="h-10 w-[100px] shrink-0 rounded-md border border-dashed border-gray-300" />
+                )}
 
                 <button
                   type="button"

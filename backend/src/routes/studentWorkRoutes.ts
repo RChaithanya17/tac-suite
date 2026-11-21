@@ -7,8 +7,10 @@ const router = Router();
 // GET all student works
 router.get("/", async (_req: Request, res: Response) => {
   try {
+    // _id breaks ties so posters saved at the same moment keep a fixed order.
     const studentWorks = await StudentWork.find().sort({
       createdAt: -1,
+      _id: -1,
     });
 
     res.json({

@@ -51,9 +51,9 @@ export const bottomStudents: PlacementStudent[] = [
 
 export const placementStats: PlacementStat[] = [
   { value: "10", label: "BATCHES COMPLETED" },
-  { value: "8", label: "SKILLS PER STUDENT" },
-  { value: "100%", label: "PLACEMENT GUARANTEE" },
   { value: "₹30K", label: "TOP PACKAGE", highlight: true },
+  { value: "100%", label: "PLACEMENT GUARANTEE" },
+  { value: "8", label: "SKILLS PER STUDENT" },
   { value: "₹1L", label: "MONTH-12 FREELANCE TARGET", highlight: true },
   { value: "10", label: "INDUSTRIES PORTFOLIO" },
 ];

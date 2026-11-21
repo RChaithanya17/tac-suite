@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IPartner {
   name: string;
+  logo?: string;
 }
 
 export interface IPartners extends Document {
@@ -17,6 +18,12 @@ const partnerSchema = new Schema<IPartner>(
       type: String,
       required: true,
       trim: true,
+    },
+    // Public path of the partner's logo image, e.g. "/partners/yaas.webp".
+    logo: {
+      type: String,
+      trim: true,
+      default: "",
     },
   },
   { _id: false }

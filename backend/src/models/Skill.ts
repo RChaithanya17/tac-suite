@@ -6,7 +6,10 @@ export interface ISkill extends Document {
   desc: string;
   icon: string;
   tags: string[];
-  stat: string;
+  stat?: string;
+  track?: string;
+  lessons?: string[];
+  aiLesson?: string;
   order: number;
   createdAt: Date;
   updatedAt: Date;
@@ -45,8 +48,22 @@ const skillSchema = new Schema<ISkill>(
     },
     stat: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
+    },
+    track: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    lessons: {
+      type: [String],
+      default: [],
+    },
+    aiLesson: {
+      type: String,
+      trim: true,
+      default: "",
     },
     order: {
       type: Number,

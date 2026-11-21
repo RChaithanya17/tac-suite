@@ -11,6 +11,15 @@ import { galleryItems } from '@/data/studentWorks';
 
 type GL = Renderer['gl'];
 
+// Widths the Next.js image optimizer serves by default (imageSizes + deviceSizes);
+// quality must be 75, the only one Next 16 allows without config.
+const NEXT_IMAGE_WIDTHS = [384, 640, 750, 828, 1080, 1200];
+const PERSPECTIVE_ENLARGEMENT = 1.26;
+const SHARPNESS_HEADROOM = 1.25;
+
+// Fewest cards the looping gallery needs to stay filled on wide screens.
+const MIN_LOOP_ITEMS = 16;
+
 function debounce<T extends (...args: never[]) => void>(func: T, wait: number) {
   let timeout: number;
   return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
@@ -194,6 +203,12 @@ class Media {
   speed: number = 0;
   isBefore: boolean = false;
   isAfter: boolean = false;
+  texture!: Texture;
+  // Lazy loading state: the poster image is only fetched when the card nears
+  // the visible area, and released again once it is far away.
+  loaded: boolean = false;
+  loading: boolean = false;
+  loadToken: number = 0;
 
   constructor({ geometry, gl, image, index, length, renderer, scene, screen, text, viewport, bend, textColor, borderRadius = 0, font }: MediaProps) {
     this.geometry = geometry;
@@ -218,6 +233,7 @@ class Media {
 
   createShader() {
     const texture = new Texture(this.gl, { generateMipmaps: true });
+    this.texture = texture;
     this.program = new Program(this.gl, {
       depthTest: false,
       depthWrite: false,
@@ -274,17 +290,69 @@ class Media {
       },
       transparent: true
     });
+  }
+
+  // Smallest Next.js image width that covers the card at the current device
+  // pixel ratio. The card is 700 × scale CSS px wide in layout, but the camera
+  // perspective shows the centre card ~1.26× larger on screen (measured: 280 →
+  // ~353 px at a 600 px gallery), plus 25% headroom so fine poster text stays crisp.
+  textureWidth() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const needed = 700 * this.scale * PERSPECTIVE_ENLARGEMENT * SHARPNESS_HEADROOM * dpr;
+    return NEXT_IMAGE_WIDTHS.find((w) => w >= needed) ?? NEXT_IMAGE_WIDTHS[NEXT_IMAGE_WIDTHS.length - 1];
+  }
+
+  load() {
+    if (this.loaded || this.loading) return;
+    this.loading = true;
+    const token = ++this.loadToken;
+    const original = this.image;
+    // Local posters go through the Next.js image optimizer (resized to the card);
+    // if that ever fails, fall back to the original file.
+    const optimized = original.startsWith('/')
+      ? `/_next/image?url=${encodeURIComponent(original)}&w=${this.textureWidth()}&q=75`
+      : original;
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = this.image;
-    img.onload = () => {
-      texture.image = img;
+    img.decoding = 'async';
+    const apply = () => {
+      if (token !== this.loadToken) return; // unloaded meanwhile
+      this.texture.image = img;
       this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
+      this.loaded = true;
+      this.loading = false;
+      this.plane.visible = true;
     };
+    img.onload = () => {
+      // Decode off the main thread before the texture upload to avoid jank.
+      img.decode().then(apply, apply);
+    };
+    img.onerror = () => {
+      if (img.src.includes('/_next/image') && optimized !== original) {
+        img.src = original;
+      } else if (token === this.loadToken) {
+        this.loading = false;
+      }
+    };
+    img.src = optimized;
+  }
+
+  unload() {
+    if (!this.loaded && !this.loading) return;
+    this.loadToken++;
+    this.loaded = false;
+    this.loading = false;
+    this.plane.visible = false;
+    // Free the GPU memory and start over with an empty texture.
+    if (this.texture.texture) this.gl.deleteTexture(this.texture.texture);
+    this.texture = new Texture(this.gl, { generateMipmaps: true });
+    this.program.uniforms.tMap.value = this.texture;
   }
 
   createMesh() {
     this.plane = new Mesh(this.gl, { geometry: this.geometry, program: this.program });
+    // Hidden until its poster has loaded (see load()).
+    this.plane.visible = false;
     this.plane.setParent(this.scene);
   }
 
@@ -334,6 +402,11 @@ class Media {
       this.extra += this.widthTotal;
       this.isBefore = this.isAfter = false;
     }
+    // Lazy loading: fetch when within 1.5 viewport widths of the visible area,
+    // release when more than 4 viewport widths away (gap avoids thrashing).
+    const distance = Math.abs(this.plane.position.x) - planeOffset - viewportOffset;
+    if (distance < this.viewport.width * 1.5) this.load();
+    else if (distance > this.viewport.width * 4) this.unload();
   }
 
   onResize({ screen, viewport }: { screen?: ScreenSize; viewport?: Viewport } = {}) {
@@ -384,6 +457,8 @@ class App {
   screen!: ScreenSize;
   viewport!: Viewport;
   raf: number = 0;
+  inView: boolean = false;
+  observer?: IntersectionObserver;
   isDown: boolean = false;
   start: number = 0;
   boundOnResize!: () => void;
@@ -404,8 +479,8 @@ class App {
     this.onResize();
     this.createGeometry();
     this.createMedias(items, bend, textColor, borderRadius, font);
-    this.update();
     this.addEventListeners();
+    this.observeVisibility();
   }
 
   createRenderer() {
@@ -431,7 +506,12 @@ class App {
 
   createMedias(items: { image: string; text: string }[] | undefined, bend: number, textColor: string, borderRadius: number, font: string) {
     const galleryItems = items && items.length ? items : [];
-    this.mediasImages = galleryItems.concat(galleryItems);
+    // The loop needs enough cards to fill the screen on both sides. Repeat the
+    // list only when it is short; a long list is used once, so no poster is
+    // loaded or rendered twice. Order is unchanged either way.
+    let looped = galleryItems;
+    while (looped.length > 0 && looped.length < MIN_LOOP_ITEMS) looped = looped.concat(galleryItems);
+    this.mediasImages = looped;
     this.medias = this.mediasImages.map((data, index) =>
       new Media({
         geometry: this.planeGeometry,
@@ -519,7 +599,29 @@ class App {
     }
   }
 
+  // Pause the render loop while the gallery is off-screen so the rest of the
+  // page scrolls smoothly; resume as it comes back into view.
+  observeVisibility() {
+    if (typeof IntersectionObserver === 'undefined') {
+      this.inView = true;
+      this.update();
+      return;
+    }
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        this.inView = entry.isIntersecting;
+        if (this.inView && !this.raf) this.update();
+      },
+      { rootMargin: '400px 0px' }
+    );
+    this.observer.observe(this.container);
+  }
+
   update() {
+    if (!this.inView) {
+      this.raf = 0;
+      return;
+    }
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
@@ -548,6 +650,8 @@ class App {
   }
 
   destroy() {
+    this.observer?.disconnect();
+    this.inView = false;
     window.cancelAnimationFrame(this.raf);
     window.removeEventListener('resize', this.boundOnResize);
     window.removeEventListener('mousewheel', this.boundOnWheel);

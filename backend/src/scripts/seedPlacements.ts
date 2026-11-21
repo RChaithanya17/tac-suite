@@ -277,8 +277,9 @@ const placementStats = [
     order: 1,
   },
   {
-    value: "8",
-    label: "SKILLS PER STUDENT",
+    value: "₹30K",
+    label: "TOP PACKAGE",
+    highlight: true,
     order: 2,
   },
   {
@@ -287,9 +288,8 @@ const placementStats = [
     order: 3,
   },
   {
-    value: "₹30K",
-    label: "TOP PACKAGE",
-    highlight: true,
+    value: "8",
+    label: "SKILLS PER STUDENT",
     order: 4,
   },
   {

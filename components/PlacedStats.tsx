@@ -32,28 +32,36 @@ export function PlacedStats({ className = "" }: { className?: string }) {
         delay: 0.35,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className={`grid grid-cols-1 divide-y divide-[#FFC62A]/40 rounded-2xl border border-[#FFC62A] bg-[#FFFDF5] sm:grid-cols-3 sm:divide-x sm:divide-y-0 ${className}`}
+      className={`relative ${className}`}
     >
-      {placedStats.map(({ value, label, Icon }) => (
-        <div
-          key={label}
-          className="flex items-center gap-4 px-6 py-5 sm:justify-center sm:gap-3 sm:px-4 sm:py-6 lg:gap-4 lg:px-6"
-        >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFC62A]/20 text-[#B8860B] lg:h-12 lg:w-12">
-            <Icon size={20} strokeWidth={2.2} aria-hidden="true" />
-          </div>
+      {/* Golden accent slab offset behind the strip. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 translate-x-1.5 translate-y-1.5 rounded-[20px] bg-[#FFC62A]"
+      />
 
-          <div className="min-w-0">
-            <p className="whitespace-nowrap text-[26px] font-black leading-none text-[#111] lg:text-[30px]">
-              {isWholeNumber(value) ? <AnimatedCounter value={value} /> : value}
-            </p>
+      <div className="relative grid grid-cols-1 divide-y divide-[#1A1A1A]/10 overflow-hidden rounded-[20px] border border-[#1A1A1A]/10 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {placedStats.map(({ value, label, Icon }) => (
+          <div
+            key={label}
+            className="flex items-center gap-4 px-6 py-5 sm:justify-center sm:gap-3 sm:px-4 sm:py-7 lg:gap-4 lg:px-6"
+          >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFF3C4] text-[#B8860B] lg:h-12 lg:w-12">
+              <Icon size={20} strokeWidth={2.2} aria-hidden="true" />
+            </div>
 
-            <p className="mt-1.5 text-[13px] font-medium leading-snug text-[#1A1A1A]/60">
-              {label}
-            </p>
+            <div className="min-w-0">
+              <p className="whitespace-nowrap text-[26px] font-black leading-none text-[#111] lg:text-[30px]">
+                {isWholeNumber(value) ? <AnimatedCounter value={value} /> : value}
+              </p>
+
+              <p className="mt-1.5 text-[13px] font-medium leading-snug text-[#1A1A1A]/60">
+                {label}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </motion.div>
   );
 }

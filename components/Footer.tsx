@@ -241,30 +241,6 @@ export function Footer() {
           ))}
         </div>
       </motion.div>
-
-      {/* EXTRA INFO */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{
-          duration: 0.5,
-          delay: 0.28,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="mt-5 text-center"
-      >
-        <p className="text-xs text-white/50 mb-1">
-          {footer.marketingStatement}
-        </p>
-
-        <a
-          href={footer.footerContact.admissionsEmailHref}
-          className="text-xs text-[#C9A227] hover:underline"
-        >
-          {footer.footerContact.admissionsEmail}
-        </a>
-      </motion.div>
     </footer>
   );
 }

@@ -10,6 +10,9 @@ interface Skill {
   icon: string;
   tags: string[];
   stat: string;
+  track?: string;
+  lessons?: string[];
+  aiLesson?: string;
   order?: number;
   createdAt: string;
   updatedAt: string;
@@ -22,6 +25,9 @@ interface SkillForm {
   icon: string;
   tags: string;
   stat: string;
+  track: string;
+  lessons: string;
+  aiLesson: string;
   order: string;
 }
 const emptyForm: SkillForm = {
@@ -32,6 +38,9 @@ const emptyForm: SkillForm = {
   icon: "Video",
   tags: "",
   stat: "",
+  track: "",
+  lessons: "",
+  aiLesson: "",
   order: "",
 };
 const iconOptions = [
@@ -45,6 +54,11 @@ const iconOptions = [
   "Megaphone",
   "ImagePlus",
   "Clapperboard",
+  "Workflow",
+  "Globe",
+  "Image",
+  "Braces",
+  "Photoshop",
 ];
 export default function SkillsAdminPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -97,6 +111,12 @@ export default function SkillsAdminPage() {
           .map((tag) => tag.trim())
           .filter(Boolean),
         stat: form.stat.trim(),
+        track: form.track.trim(),
+        lessons: form.lessons
+          .split("\n")
+          .map((lesson) => lesson.trim())
+          .filter(Boolean),
+        aiLesson: form.aiLesson.trim(),
         order: Number(form.order) || 0,
       };
       const endpoint = editingId
@@ -137,6 +157,9 @@ export default function SkillsAdminPage() {
       icon: skill.icon,
       tags: skill.tags.join(", "),
       stat: skill.stat,
+      track: skill.track ?? "",
+      lessons: (skill.lessons ?? []).join("\n"),
+      aiLesson: skill.aiLesson ?? "",
       order: String(skill.order ?? ""),
     });
     setError("");
@@ -355,9 +378,77 @@ export default function SkillsAdminPage() {
                     })
                   }
                   placeholder="Short-form mastery"
-                  required
                   className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
                 />
+              </div>
+              <div>
+                <label
+                  htmlFor="skill-track"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Module Track
+                </label>
+                <input
+                  id="skill-track"
+                  type="text"
+                  value={form.track}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      track: event.target.value,
+                    })
+                  }
+                  placeholder="Photoshop + AI"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="skill-lessons"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Lessons
+                </label>
+                <textarea
+                  id="skill-lessons"
+                  rows={6}
+                  value={form.lessons}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      lessons: event.target.value,
+                    })
+                  }
+                  placeholder={"Movie / OTT Poster Design\nSocial Media Design"}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100 resize-y"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  One lesson per line. Text after a middle dot ( · ) shows as a muted note. Leave blank to keep the simple card layout.
+                </p>
+              </div>
+              <div>
+                <label
+                  htmlFor="skill-ai-lesson"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  AI Lesson
+                </label>
+                <input
+                  id="skill-ai-lesson"
+                  type="text"
+                  value={form.aiLesson}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      aiLesson: event.target.value,
+                    })
+                  }
+                  placeholder="Firefly · Generative Fill & Expand"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Shown after the lessons with an AI badge.
+                </p>
               </div>
               <div>
                 <label

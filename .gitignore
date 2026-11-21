@@ -44,3 +44,6 @@ next-env.d.ts
 /public/works/optimized-backup
 /public/tutors/optimized-backup
 /public/students/optimized-backup
+
+# local database backups (not part of the site)
+backups/
