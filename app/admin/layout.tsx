@@ -77,6 +77,10 @@ const navigationItems = [
     href: "/admin/placement-section",
   },
   {
+    label: "Who Gets Placed",
+    href: "/admin/who-gets-placed",
+  },
+  {
     label: "Footer",
     href: "/admin/footer",
   },

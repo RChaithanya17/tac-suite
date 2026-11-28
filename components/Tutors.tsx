@@ -1,15 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Bebas_Neue } from "next/font/google";
+import { Oswald } from "next/font/google";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { tutors as staticTutors } from "@/data/tutors";
 
-const bebas = Bebas_Neue({
+// Same display font as the "Who gets placed" and hiring partner headings.
+const oswald = Oswald({
   subsets: ["latin"],
-  weight: "400",
+  weight: "700",
 });
 
 type Tutor = {
@@ -24,6 +25,42 @@ export default function TutorsSection() {
   const [index, setIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // "TAC TUTORS" is sized to be exactly as wide as the paragraph's
+  // longest line, and re-fitted whenever the layout changes.
+  const headingTextRef = useRef<HTMLSpanElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const [headingSize, setHeadingSize] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const heading = headingTextRef.current;
+    const paragraph = paragraphRef.current;
+    if (!heading || !paragraph) return;
+
+    const fit = () => {
+      const range = document.createRange();
+      range.selectNodeContents(paragraph);
+      const lineWidth = Math.max(
+        0,
+        ...Array.from(range.getClientRects()).map((rect) => rect.width)
+      );
+      const headingWidth = heading.getBoundingClientRect().width;
+      const currentSize = parseFloat(getComputedStyle(heading).fontSize);
+      if (!lineWidth || !headingWidth || !currentSize) return;
+
+      const nextSize = (currentSize * lineWidth) / headingWidth;
+      setHeadingSize((prev) =>
+        prev !== null && Math.abs(prev - nextSize) < 0.25 ? prev : nextSize
+      );
+    };
+
+    fit();
+    document.fonts?.ready.then(fit);
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(paragraph);
+    return () => observer.disconnect();
+  }, []);
 
   // Fetch tutors from the backend
   useEffect(() => {
@@ -164,12 +201,16 @@ export default function TutorsSection() {
           className="mb-10 px-4"
         >
           <h2
-            className={`${bebas.className} text-[56px] sm:text-[80px] md:text-[110px] leading-[0.9] tracking-tighter uppercase text-[#1d1d1d]`}
+            className={`${oswald.className} text-[44px] font-bold leading-[1.05] uppercase text-[#1d1d1d] sm:text-[64px] md:text-[86px]`}
+            style={headingSize ? { fontSize: `${headingSize}px` } : undefined}
           >
-            TAC <span className="text-[#FFC62A]">Tutors</span>
+            <span ref={headingTextRef} className="inline-block whitespace-nowrap">
+              TAC <span className="text-[#FFC62A]">Tutors</span>
+            </span>
           </h2>
 
           <motion.p
+            ref={paragraphRef}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

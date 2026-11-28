@@ -333,7 +333,18 @@ const seedPlacements = async (): Promise<void> => {
       return;
     }
 
-    const students = [...topStudents, ...bottomStudents];
+    // Row and position on the website, matched by photo.
+    const TOP_ORDER = ["25", "21", "12", "8", "26", "28", "6", "23", "24", "1", "20", "10", "11", "18", "19-optimized"];
+    const BOTTOM_ORDER = ["27", "2", "5", "30", "29-optimized", "22", "13", "17", "9-optimized", "3", "14", "16", "7", "15", "4"];
+    const key = (photo: string) => photo.replace(/^\/students\//, "").replace(/\.[a-z]+$/, "");
+
+    const students = [...topStudents, ...bottomStudents].map((student) => {
+      const top = TOP_ORDER.indexOf(key(student.photo));
+      const bottom = BOTTOM_ORDER.indexOf(key(student.photo));
+      if (top >= 0) return { ...student, section: "top", order: top + 1 };
+      if (bottom >= 0) return { ...student, section: "bottom", order: bottom + 1 };
+      return student;
+    });
 
     await PlacementStudent.insertMany(students);
     await PlacementStat.insertMany(placementStats);

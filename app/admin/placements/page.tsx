@@ -13,6 +13,7 @@ type PlacementStudent = {
   skills: string[];
   lpa?: string;
   section: "top" | "bottom";
+  order?: number | string | null;
 };
 
 type PlacementStat = {
@@ -32,6 +33,7 @@ const emptyStudent: PlacementStudent = {
   skills: [],
   lpa: "",
   section: "top",
+  order: "",
 };
 
 const emptyStat: PlacementStat = {
@@ -121,6 +123,10 @@ export default function PlacementsAdminPage() {
         skills: studentForm.skills,
         lpa: studentForm.lpa?.trim() || undefined,
         section: studentForm.section,
+        order:
+          String(studentForm.order ?? "").trim() === ""
+            ? null
+            : Number(studentForm.order),
       };
 
       const response = editingStudentId
@@ -312,6 +318,7 @@ export default function PlacementsAdminPage() {
       skills: [...student.skills],
       lpa: student.lpa ?? "",
       section: student.section,
+      order: student.order ? String(student.order) : "",
     });
 
     window.scrollTo({
@@ -670,6 +677,31 @@ export default function PlacementsAdminPage() {
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                Display Order (optional)
+              </label>
+
+              <input
+                type="number"
+                min={1}
+                step={1}
+                placeholder="e.g. 1"
+                value={studentForm.order ?? ""}
+                onChange={(event) =>
+                  setStudentForm((current) => ({
+                    ...current,
+                    order: event.target.value,
+                  }))
+                }
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-black"
+              />
+
+              <p className="mt-1 text-xs text-gray-400">
+                Position within its row on the website (1 shows first). Leave blank to show after the ordered students.
+              </p>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-700">
                 Skills
               </label>
 
@@ -798,6 +830,7 @@ export default function PlacementsAdminPage() {
                     <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
                       <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
                         {student.section}
+                        {student.order ? ` · #${student.order}` : ""}
                       </span>
 
                       <div className="flex gap-2">

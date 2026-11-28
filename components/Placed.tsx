@@ -14,30 +14,22 @@ type PlacementStudent = {
   skills: string[];
   lpa?: string;
   section: "top" | "bottom";
+  order?: number | null;
 };
 
 const API_BASE_URL = "http://localhost:5000";
 
-/* Parse a stored package (e.g. "3.0", "4.5 LPA") to a number.
- * Missing or unparseable values return null so they never rank as highest. */
-function parsePackage(lpa?: string): number | null {
-  const match = lpa?.match(/\d+(\.\d+)?/);
-  if (!match) return null;
-  const value = Number.parseFloat(match[0]);
-  return Number.isFinite(value) ? value : null;
-}
-
-/* Highest package first; students without a valid package go last.
- * Array.prototype.sort is stable, so ties keep their original order. */
-function sortByPackageDesc(students: PlacementStudent[]) {
-  return [...students].sort((a, b) => {
-    const pa = parsePackage(a.lpa);
-    const pb = parsePackage(b.lpa);
-    if (pa === null && pb === null) return 0;
-    if (pa === null) return 1;
-    if (pb === null) return -1;
-    return pb - pa;
-  });
+/* Students of one row in their display order (1 first); students without
+ * an order go last. Array.prototype.sort is stable, so ties keep API order. */
+function rowInOrder(
+  students: PlacementStudent[],
+  section: PlacementStudent["section"]
+) {
+  const rank = (s: PlacementStudent) =>
+    s.order && s.order >= 1 ? s.order : Number.MAX_SAFE_INTEGER;
+  return students
+    .filter((s) => s.section === section)
+    .sort((a, b) => rank(a) - rank(b));
 }
 
 function StudentCard({ student }: { student: PlacementStudent }) {
@@ -87,9 +79,9 @@ function TopCarousel({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-linear-to-r from-[#FBF8E4] to-transparent" />
+      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-linear-to-r from-[#F3EDD7] to-transparent" />
 
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-linear-to-l from-[#FBF8E4] to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-linear-to-l from-[#F3EDD7] to-transparent" />
 
       <div
         className="placed-track-left"
@@ -125,9 +117,9 @@ function BottomCarousel({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-linear-to-r from-[#FBF8E4] to-transparent" />
+      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-linear-to-r from-[#F3EDD7] to-transparent" />
 
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-linear-to-l from-[#FBF8E4] to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-linear-to-l from-[#F3EDD7] to-transparent" />
 
       <div
         className="placed-track-right"
@@ -175,13 +167,9 @@ export function SimpleInfiniteCarousel() {
           return;
         }
 
-        /* Top carousel: highest-paid half. Bottom: the rest, still
-         * high-to-low so the lowest/unknown packages appear last. */
-        const sorted = sortByPackageDesc(students);
-        const splitAt = Math.ceil(sorted.length / 2);
-
-        setTopStudents(sorted.slice(0, splitAt));
-        setBottomStudents(sorted.slice(splitAt));
+        /* Each row shows its own section in the order set in admin. */
+        setTopStudents(rowInOrder(students, "top"));
+        setBottomStudents(rowInOrder(students, "bottom"));
       } catch (error) {
         console.error("Failed to load placement students:", error);
       } finally {
@@ -199,7 +187,7 @@ export function SimpleInfiniteCarousel() {
   }, []);
 
   return (
-    <section className="overflow-hidden bg-[#FBF8E4] py-12 text-black">
+    <section className="overflow-hidden border-t border-black/6 bg-[#F3EDD7] py-12 text-black">
       {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}

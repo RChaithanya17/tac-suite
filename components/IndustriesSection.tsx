@@ -114,7 +114,7 @@ export function IndustriesSection() {
   return (
     <section className="bg-[#1A1A1A] text-[#f7f1e4] px-[6%] pt-28 pb-14">
       {/* TOP */}
-      <div className="grid md:grid-cols-2 gap-10 items-start mb-16 md:mb-30">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-start md:items-center mb-10 md:mb-14">
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}

@@ -18,6 +18,7 @@ import navbarRoutes from "./routes/navbarRoutes.js";
 import challengeRoutes from "./routes/challengeRoutes.js";
 import partnersRoutes from "./routes/partnersRoutes.js";
 import studentWorksSettingsRoutes from "./routes/studentWorksSettingsRoutes.js";
+import whoGetsPlacedRoutes from "./routes/whoGetsPlacedRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,6 +46,7 @@ app.use("/api/navbar", navbarRoutes);
 app.use("/api/challenge", challengeRoutes);
 app.use("/api/partners", partnersRoutes);
 app.use("/api/student-works-settings", studentWorksSettingsRoutes);
+app.use("/api/who-gets-placed", whoGetsPlacedRoutes);
 const startServer = async (): Promise<void> => {
   try {
     await connectDB();

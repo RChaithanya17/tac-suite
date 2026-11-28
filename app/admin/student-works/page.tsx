@@ -8,6 +8,8 @@ interface StudentWork {
   _id: string;
   image: string;
   text: string;
+  priority?: number | null;
+  endOrder?: number | null;
 }
 
 interface StudentWorksSettings {
@@ -49,6 +51,8 @@ export default function StudentWorksAdminPage() {
 
   const [image, setImage] = useState("");
   const [text, setText] = useState("");
+  const [priority, setPriority] = useState("");
+  const [endOrder, setEndOrder] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -109,6 +113,8 @@ export default function StudentWorksAdminPage() {
   const resetForm = () => {
     setImage("");
     setText("");
+    setPriority("");
+    setEndOrder("");
     setEditingWork(null);
   };
 
@@ -121,6 +127,8 @@ export default function StudentWorksAdminPage() {
     setEditingWork(work);
     setImage(work.image);
     setText(work.text);
+    setPriority(work.priority ? String(work.priority) : "");
+    setEndOrder(work.endOrder ? String(work.endOrder) : "");
     setShowForm(true);
   };
 
@@ -149,6 +157,8 @@ export default function StudentWorksAdminPage() {
           body: JSON.stringify({
             image,
             text,
+            priority: priority.trim() === "" ? null : Number(priority),
+            endOrder: endOrder.trim() === "" ? null : Number(endOrder),
           }),
         }
       );
@@ -489,6 +499,58 @@ export default function StudentWorksAdminPage() {
                   />
                 </div>
 
+                <div>
+                  <label
+                    htmlFor="student-work-priority"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    Display Priority (optional)
+                  </label>
+
+                  <input
+                    id="student-work-priority"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={priority}
+                    onChange={(event) =>
+                      setPriority(event.target.value)
+                    }
+                    placeholder="e.g. 1"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-black"
+                  />
+
+                  <p className="mt-2 text-xs text-gray-400">
+                    1 shows first on the website. Leave blank to show it after the prioritised posters (newest first).
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="student-work-end-order"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    Show at End – Order (optional)
+                  </label>
+
+                  <input
+                    id="student-work-end-order"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={endOrder}
+                    onChange={(event) =>
+                      setEndOrder(event.target.value)
+                    }
+                    placeholder="e.g. 1"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-black"
+                  />
+
+                  <p className="mt-2 text-xs text-gray-400">
+                    Shows the poster in the final group at the end (1 comes first within that group). Ignored if Display Priority is set.
+                  </p>
+                </div>
+
                 {image && (
                   <div>
                     <p className="mb-2 text-sm font-medium text-gray-700">
@@ -590,6 +652,15 @@ export default function StudentWorksAdminPage() {
 
                       <td className="px-4 py-4 font-medium text-gray-900">
                         {work.text}
+                        {work.priority ? (
+                          <span className="ml-2 rounded bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800">
+                            Priority {work.priority}
+                          </span>
+                        ) : work.endOrder ? (
+                          <span className="ml-2 rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-700">
+                            End {work.endOrder}
+                          </span>
+                        ) : null}
                       </td>
 
                       <td className="max-w-xs px-4 py-4 text-sm text-gray-500">

@@ -8,6 +8,9 @@ export interface IPlacementStudent extends Document {
   skills: string[];
   lpa?: string;
   section: "top" | "bottom";
+  // Optional position within its row (1 shows first). Students without
+  // one are shown after the ordered ones.
+  order?: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -53,6 +56,12 @@ const placementStudentSchema = new Schema<IPlacementStudent>(
       type: String,
       enum: ["top", "bottom"],
       required: true,
+    },
+
+    order: {
+      type: Number,
+      min: 1,
+      default: null,
     },
   },
   {

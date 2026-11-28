@@ -34,28 +34,26 @@ export function PlacedStats({ className = "" }: { className?: string }) {
       }}
       className={`relative ${className}`}
     >
-      {/* Golden accent slab offset behind the strip. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 translate-x-1.5 translate-y-1.5 rounded-[20px] bg-[#FFC62A]"
-      />
-
-      <div className="relative grid grid-cols-1 divide-y divide-[#1A1A1A]/10 overflow-hidden rounded-[20px] border border-[#1A1A1A]/10 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <div className="relative grid grid-cols-1 divide-y divide-[#1A1A1A]/10 overflow-hidden rounded-[20px] border border-[#1A1A1A]/12 bg-[#F3EDD7] shadow-[0_10px_30px_rgba(26,26,26,0.07)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {placedStats.map(({ value, label, Icon }) => (
           <div
             key={label}
-            className="flex items-center gap-4 px-6 py-5 sm:justify-center sm:gap-3 sm:px-4 sm:py-7 lg:gap-4 lg:px-6"
+            className="flex items-center gap-4 px-6 py-5 sm:justify-center sm:px-4 sm:py-7 lg:px-6 min-[640px]:gap-3 min-[1024px]:gap-4 min-[1280px]:gap-3 min-[1440px]:gap-[18px] min-[1440px]:py-8"
           >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFF3C4] text-[#B8860B] lg:h-12 lg:w-12">
-              <Icon size={20} strokeWidth={2.2} aria-hidden="true" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#FFC62A] text-[#1A1A1A] min-[640px]:h-12 min-[640px]:w-12 min-[1024px]:h-14 min-[1024px]:w-14 min-[1280px]:h-13 min-[1280px]:w-13 min-[1440px]:h-16 min-[1440px]:w-16 min-[1440px]:rounded-2xl">
+              <Icon
+                strokeWidth={2.2}
+                aria-hidden="true"
+                className="h-6.5 w-6.5 min-[640px]:h-5.5 min-[640px]:w-5.5 min-[1024px]:h-6.5 min-[1024px]:w-6.5 min-[1280px]:h-6 min-[1280px]:w-6 min-[1440px]:h-7.5 min-[1440px]:w-7.5"
+              />
             </div>
 
             <div className="min-w-0">
-              <p className="whitespace-nowrap text-[26px] font-black leading-none text-[#111] lg:text-[30px]">
+              <p className="whitespace-nowrap text-[34px] font-black leading-none text-[#C41E3A] min-[640px]:text-[28px] min-[1024px]:text-[38px] min-[1280px]:text-[34px] min-[1440px]:text-[42px]">
                 {isWholeNumber(value) ? <AnimatedCounter value={value} /> : value}
               </p>
 
-              <p className="mt-1.5 text-[13px] font-medium leading-snug text-[#1A1A1A]/60">
+              <p className="mt-1.5 text-[15px] min-[1024px]:whitespace-nowrap font-medium leading-snug text-[#1A1A1A]/65 min-[640px]:text-[13px] min-[1024px]:text-[15px] min-[1280px]:text-[14px] min-[1440px]:mt-2 min-[1440px]:text-[16px]">
                 {label}
               </p>
             </div>

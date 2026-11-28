@@ -40,12 +40,12 @@ const fallbackSkills: SkillFromAPI[] = [
   },
   {
     id: "02",
-    title: "Graphic Design",
+    title: "Illustrator + AI",
     desc: "Vectors, type, packaging and merch.",
     icon: "Palette",
     tags: ["Illustrator", "Vectors", "Logos"],
     stat: "Brand assets",
-    track: "Illustrator + AI",
+    track: "",
     lessons: [
       "Typography & Font Design",
       "Print & Packaging Design",
@@ -197,7 +197,7 @@ export function SkillsSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#FBF8E4] px-[6%] py-24 text-[#1D1D1D]">
+    <section className="relative min-h-screen overflow-hidden bg-[#FBF8E4] px-[6%] pt-24 pb-10 text-[#1D1D1D]">
       {/* BACKGROUND TAC TEXT */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -365,15 +365,17 @@ export function SkillsSection() {
                         : "border-[#1D1D1D]/10 group-hover:border-white/10"
                     }`}
                   >
-                    <p
-                      className={`mb-1.5 text-[12px] font-black uppercase tracking-tight transition-colors duration-300 ${
-                        isSelected
-                          ? "text-white"
-                          : "text-[#1D1D1D] group-hover:text-white"
-                      }`}
-                    >
-                      {skill.track}
-                    </p>
+                    {skill.track ? (
+                      <p
+                        className={`mb-1.5 text-[12px] font-black uppercase tracking-tight transition-colors duration-300 ${
+                          isSelected
+                            ? "text-white"
+                            : "text-[#1D1D1D] group-hover:text-white"
+                        }`}
+                      >
+                        {skill.track}
+                      </p>
+                    ) : null}
 
                     <ol className="space-y-2 min-[1800px]:space-y-2.5">
                       {lessons.map((lesson, li) => {

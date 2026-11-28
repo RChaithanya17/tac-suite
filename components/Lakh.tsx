@@ -132,7 +132,7 @@ export function ChallengeSection() {
         }
       `}</style>
 
-      <section className="bg-[#FBF8E4] px-[6%] py-28 text-black">
+      <section className="bg-[#FBF8E4] px-[6%] pt-20 pb-28 text-black">
         <div className="grid items-center gap-16 md:grid-cols-2">
 
           {/* LEFT SIDE */}

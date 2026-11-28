@@ -804,7 +804,7 @@ export function StudentWorks() {
 
   return (
     <div className="w-full bg-[#FBF8E4] text-[#1A1A1A]">
-      <section className="w-full py-24 flex flex-col items-center gap-12">
+      <section className="w-full pt-12 pb-6 flex flex-col items-center gap-12">
 
         {/* ── Header block ── */}
         <motion.div
@@ -874,7 +874,7 @@ export function StudentWorks() {
             duration: 0.25,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="group relative mt-2 inline-flex items-center justify-center overflow-hidden border border-[#1A1A1A] px-8 max-[360px]:px-3 py-4 text-sm font-semibold tracking-[1px]"
+          className="group relative -mt-4 inline-flex items-center justify-center overflow-hidden border border-[#1A1A1A] px-8 max-[360px]:px-3 py-4 text-sm font-semibold tracking-[1px]"
           style={{
             fontFamily: "Figtree, sans-serif",
           }}

@@ -5,6 +5,14 @@ import protect from "../middleware/authMiddleware.js";
 
 const router = Router();
 
+/* Positive whole numbers only; anything else (blank, 0, text) clears it. */
+function parseOrder(value: unknown): number | null {
+  const n = Number(value);
+  return value !== null && value !== "" && Number.isInteger(n) && n >= 1
+    ? n
+    : null;
+}
+
 /* =========================================================
    STUDENTS
 ========================================================= */
@@ -12,7 +20,17 @@ const router = Router();
 // GET all placement students - public
 router.get("/students", async (_req: Request, res: Response) => {
   try {
-    const students = await PlacementStudent.find().sort({ createdAt: 1 });
+    // Ordered students first (order 1, 2, 3 ...), then the rest oldest first;
+    // _id breaks ties so the order never changes between loads.
+    const students = await PlacementStudent.aggregate([
+      {
+        $addFields: {
+          sortOrder: { $ifNull: ["$order", Number.MAX_SAFE_INTEGER] },
+        },
+      },
+      { $sort: { sortOrder: 1, createdAt: 1, _id: 1 } },
+      { $project: { sortOrder: 0 } },
+    ]);
 
     res.json({
       success: true,
@@ -69,6 +87,7 @@ router.post(
         skills,
         lpa,
         section,
+        order,
       } = req.body;
 
       const student = await PlacementStudent.create({
@@ -79,6 +98,7 @@ router.post(
         skills,
         lpa,
         section,
+        order: parseOrder(order),
       });
 
       res.status(201).json({
@@ -113,17 +133,22 @@ router.put(
         section,
       } = req.body;
 
+      const update: Record<string, unknown> = {
+        photo,
+        name,
+        company,
+        role,
+        skills,
+        lpa,
+        section,
+      };
+
+      // Only touch the order when the admin form sends it.
+      if ("order" in req.body) update.order = parseOrder(req.body.order);
+
       const student = await PlacementStudent.findByIdAndUpdate(
         req.params.id,
-        {
-          photo,
-          name,
-          company,
-          role,
-          skills,
-          lpa,
-          section,
-        },
+        update,
         {
           new: true,
           runValidators: true,
